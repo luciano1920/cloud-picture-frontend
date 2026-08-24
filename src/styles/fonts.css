@@ -1,0 +1,16 @@
+/* 全局应用字体（默认使用Regular字重） */
+body,
+html {
+  font-family:
+    'HarmonyOS Sans SC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-weight: 400; /* 默认字重为Regular（400） */
+  -webkit-font-smoothing: antialiased; /* 抗锯齿优化 */
+  -moz-osx-font-smoothing: grayscale;
+}

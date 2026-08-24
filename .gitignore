@@ -1,0 +1,79 @@
+# 1. 依赖目录
+node_modules/
+.pnp/
+.pnp.js
+
+# 2. 生产构建产物
+dist/
+dist-ssr/
+build/
+dist*
+
+# 3. 日志文件
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 4. 环境变量与本地配置
+.env.local
+.env.*.local
+*.local
+
+# 5. 编辑器与 IDE 配置
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.history/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+.codefree
+
+# 6. 系统文件
+.DS_Store
+Thumbs.db
+
+# 7. 测试与覆盖率
+coverage/
+.nyc_output/
+/cypress/videos/
+/cypress/screenshots/
+__screenshots__/
+
+# 8. 缓存与临时文件
+*.tsbuildinfo
+.eslintcache
+*.timestamp-*-*.mjs
+
+# VuePress 缓存
+.vuepress/.cache/
+.vuepress/.temp/
+
+# 自动生成的类型声明
+auto-*.d.ts
+
+# 9. 压缩包
+*.tgz
+*.tar.gz
+
+# 10. 可重新生成的离线文档（几万行级，官方可拉取/安装，勿入库）
+#     - Antdv Next skill：npx skills add antdv-next/skills 重新安装
+#     - 完整文档：curl 重新拉取，见 CLAUDE.md「Antdv Next 官方文档」
+.claude/skills/antdv-next/references/
+.claude/references/antdv-llms-full*.txt
+skills-lock.json
+.agents/
+
+# 11. Claude Code 本地配置（机器相关，不入库）
+.claude/settings.local.json
+
+# 12. 提示词工程文件
+prompt*
