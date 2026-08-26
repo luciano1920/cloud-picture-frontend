@@ -20,10 +20,16 @@ description: 执行 git 提交、分支管理、合并请求等操作时使用�
 
 ```
 <type>(<scope>): <subject>
+
+<详细说明>（可选，多行时与 subject 空一行）
+
+<type2>: <subject2>（可选，多 type 时与上一段落同层级，不缩进）
 ```
 
-- `scope`：可选，影响范围，小写 kebab-case（如 `apply`、`auth`、`user`）
+- `scope`：可选，影响范围，小写 kebab-case（如 `apply`、`auth`、`user`、`component`）
 - `subject`：中文或英文，首字母小写，结尾无句号，**不超过 50 字符**
+- `feat` 的 body 必须写详细说明，逐条列出做了什么（每行用 `- ` 开头）
+- 多 type 共存时（如 `feat` + `docs`），每个 type 段落**同层级**，`docs` 不要缩进在 `feat` 的 body 下面
 
 ### 允许的 type
 
@@ -49,6 +55,15 @@ git commit -m "feat(apply): 增加补卡申请页面"
 git commit -m "fix(auth): 修复 token 刷新后权限未更新"
 git commit -m "test(utils): 添加 formatDate 单元测试"
 git commit -m "revert: abc1234 - feat(apply): 增加补卡申请页面"
+
+# 正例（多 type + 详细 body）
+git commit -m "feat(component): 新增 PictureCard 图片卡片组件及 PictureListNew 瀑布流列表
+
+- PictureCard: 图片悬浮缩放动画、底部毛玻璃横栏
+- PictureListNew: 基于 a-masonry 的瀑布流布局
+- HomePage: 替换旧 PictureList 为新组件
+
+docs: 补充 vue.md CSS 类名 SMACSS 命名规范"
 
 # 反例
 git commit -m "更新"      # 无 type/scope
