@@ -31,7 +31,7 @@ import GlobalHeader from '@/components/layout/GlobalHeader.vue'
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: unset;
-    padding-inline: 280px;
+    padding-inline: 10vw;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     position: fixed;
