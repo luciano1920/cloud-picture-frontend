@@ -29,6 +29,26 @@ description: Vue 页面/组件/布局规范。编辑 src/pages、src/components�
 - 业务组件样式必须 `scoped`
 - 全局样式只允许改 `src/styles/global.css`，**禁止**在 `App.vue` 或组件内写全局样式
 
+## CSS 类名命名
+
+遵循 **kebab-case + SMACSS 五层结构**：
+
+| 层级 | 规则 | 示例 |
+| --- | --- | --- |
+| **Base** | 元素选择器，仅在全局样式中使用 | `body`、`a`、`img` |
+| **Layout** | `l-` 前缀，用于页面级布局容器 | `l-main`、`l-grid`、`l-header` |
+| **Module** | 组件名 kebab-case，与组件命名一致 | `.picture-card`、`.search-bar`、`.global-header` |
+| **State** | `is-` 前缀，表示临时状态 | `.is-active`、`.is-zoomed`、`.is-hidden` |
+| **Theme** | `theme-` 前缀，表示主题变体 | `.theme-dark`、`.theme-compact` |
+
+详细约束：
+
+- **禁止** BEM 分隔符（`__`、`--`）：子元素类名直接以模块名短横线连接，如 `.picture-card-image-wrapper` 而非 `.picture-card__image-wrapper`
+- 子元素类名以模块名为前缀，逐级拼接：`.picture-card` → `.picture-card-bar` → `.picture-card-action-btn`
+- 状态类统一用 `is-` 前缀，配合 `&.is-xxx` 或 `:class="{ 'is-xxx': condition }"` 使用，**禁止** `--modifier` 或 `-active` 等非标后缀
+- 过渡动画类名（Vue `<Transition name="foo">` 自动生成 `.foo-enter-active` 等）不受此限
+- `:deep()` 包裹的第三方库类名不受此限
+
 ## 行数与拆分（SRP）
 
 - 单文件**总行数**（含 template/script/style）：建议 ≤500，**硬上限 800**

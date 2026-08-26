@@ -27,14 +27,14 @@
     </div>
 
     <!-- 图片列表 -->
-    <PictureList :data-list="dataList" :loading="loading" />
+    <PictureListNew :data-list="dataList" :loading="loading" />
 
     <!-- 分页器 -->
     <a-pagination
       :current="searchParams.current"
       :page-size="searchParams.pageSize"
       :total="total"
-      style="justify-content: flex-end"
+      style="justify-content: flex-end; margin-top: 20px"
       @change="onPageChange"
     />
   </div>
@@ -47,15 +47,15 @@ import {
   listPictureTagCategoryVoUsingGet,
   listPictureVoByPageUsingPost,
 } from '@/api/picture-controller'
-import PictureList from '@/components/common/PictureList.vue'
+import PictureListNew from '@/components/common/PictureListNew.vue'
 
 // 图片展示列表相关数据
 const loading = ref(true)
-const dataList = ref<API.PictureVO[]>([])
+const dataList = ref<PICTURE_API.PictureVO[]>([])
 const total = ref(0)
 
 // 搜索条件
-const searchParams = reactive<API.PictureQueryRequest>({
+const searchParams = reactive<PICTURE_API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'create_time',
