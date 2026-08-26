@@ -258,7 +258,7 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: '主页',
-        component: () => import('@/pages/HomePage.vue'),
+        component: () => import('@/pages/home/HomePage.vue'),
         meta: {
           icon: () => h(HomeOutlined),
           // access: ACCESS_ENUM.USER,

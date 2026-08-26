@@ -46,7 +46,7 @@ import GlobalHeader from '@/components/layout/GlobalHeader.vue'
       var(--content-bg-gradient-end)
     );
     height: 100vh;
-    padding: 92px 260px 56px;
+    // padding: 92px 260px 56px;
     width: 100%;
     overflow-y: auto;
   }
