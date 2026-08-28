@@ -74,6 +74,7 @@ declare module 'vue' {
     GlobalSider: typeof import('./src/components/layout/GlobalSider.vue')['default']
     ImageCropper: typeof import('./src/components/common/ImageCropper.vue')['default']
     ImageOutPainting: typeof import('./src/components/common/ImageOutPainting.vue')['default']
+    JustifiedPictureList: typeof import('./src/components/common/JustifiedPictureList.vue')['default']
     PictureCard: typeof import('./src/components/common/PictureCard.vue')['default']
     PictureList: typeof import('./src/components/common/PictureList.vue')['default']
     PictureListNew: typeof import('./src/components/common/PictureListNew.vue')['default']

@@ -268,7 +268,7 @@ declare namespace PICTURE_API {
     thumbnailUrl?: string
     updateTime?: string
     url?: string
-    user?: UserVO
+    user?: USER_API.UserVO
     userId?: number
     viewCount?: number
   }

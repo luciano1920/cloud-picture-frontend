@@ -1,92 +1,148 @@
 <template>
-  <div
-    class="picture-card"
-    :style="cardStyle"
-    @mouseenter="isHovering = true"
-    @mouseleave="isHovering = false"
-    @click="handleClick"
-  >
-    <!-- 图片区域 -->
-    <div class="picture-card-image-wrapper">
-      <img
-        :src="picture.thumbnailUrl ?? picture.url ?? ''"
-        :alt="picture.picName ?? '图片'"
-        class="picture-card-image"
-        :class="{ 'is-zoomed': isHovering }"
-      />
-    </div>
+  <div class="picture-card-stack">
+    <!-- 底下叠的两层纯色卡片（视觉层） -->
+    <div class="stack-card stack-card-1" :style="stackCardStyle1"></div>
+    <div class="stack-card stack-card-2" :style="stackCardStyle2"></div>
 
-    <!-- 底部模糊毛玻璃横栏 -->
-    <Transition name="bar-fade">
-      <div v-if="isHovering" class="picture-card-bar">
+    <div
+      class="picture-card"
+      :class="{ 'always-show-bar': alwaysShowBar }"
+      @click="handleCardClick"
+    >
+      <div class="picture-card-tag-bar">
+        <slot name="tag"></slot>
+      </div>
+
+      <div class="picture-card-image-wrapper">
+        <img
+          :src="picture.thumbnailUrl ?? picture.url"
+          :alt="picture.picName ?? '图片'"
+          class="picture-card-image"
+        />
+      </div>
+
+      <div v-if="showActionBar" class="picture-card-action-bar">
         <span class="picture-card-name">{{ picture.picName }}</span>
         <div class="picture-card-actions">
-          <slot name="actions">
-            <a-button type="text" size="small" class="picture-card-action-btn" @click.stop>
-              <template #icon><LikeOutlined /></template>
-            </a-button>
-            <a-button type="text" size="small" class="picture-card-action-btn" @click.stop>
-              <template #icon><DownloadOutlined /></template>
-            </a-button>
-            <a-button type="text" size="small" class="picture-card-action-btn" @click.stop>
-              <template #icon><ShareAltOutlined /></template>
-            </a-button>
-          </slot>
+          <slot name="actions"></slot>
         </div>
       </div>
-    </Transition>
+    </div>
+
+    <div v-if="showInfo" class="picture-card-info">
+      <div class="picture-info-title">{{ picture.picName }}</div>
+      <div class="picture-info-meta">
+        <div class="user-info">
+          <a-avatar :size="20" :src="picture.user?.userAvatar" />
+          <div class="user-name">{{ picture.user?.userName }}</div>
+        </div>
+        <div class="view-info">
+          <EyeOutlined />
+          {{ picture.viewCount }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { LikeOutlined, DownloadOutlined, ShareAltOutlined } from '@antdv-next/icons'
+import { computed } from 'vue'
+import { EyeOutlined } from '@antdv-next/icons'
 
 interface Props {
   /** 图片数据 */
   picture: PICTURE_API.PictureVO
-  /** 卡片高度，默认 240px */
-  height?: number
-  /** 点击卡片是否跳转图片详情，默认 true */
-  clickable?: boolean
+  /** 是否始终显示底部毛玻璃操作栏，设置为false则鼠标悬停时才显示，需showActionBar设置为true */
+  alwaysShowBar?: boolean
+  /** 是否显示底部毛玻璃操作栏 */
+  showActionBar?: boolean
+  /** 是否显示底部叠卡投影 */
+  showStackShadow?: boolean
+  /** 是否显示图片底部信息栏 */
+  showInfo?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  height: 240,
-  clickable: true,
+  alwaysShowBar: false,
+  showActionBar: false,
+  showStackShadow: false,
+  showInfo: false,
 })
 
 const emit = defineEmits<{
-  click: [picture: PICTURE_API.PictureVO]
+  'card-click': [picture: PICTURE_API.PictureVO]
 }>()
 
-const router = useRouter()
-
-const isHovering = ref(false)
-
-const cardStyle = computed(() => ({
-  height: `${props.height}px`,
-}))
-
 /** 点击卡片跳转图片详情 */
-const handleClick = () => {
-  emit('click', props.picture)
-  if (props.clickable && props.picture.id) {
-    router.push({
-      path: `/picture/${props.picture.id}`,
-    })
-  }
+const handleCardClick = () => {
+  emit('card-click', props.picture)
 }
+
+/** 主色调 */
+const mainColor = computed(() => props.picture.picColor ?? '#409EFF')
+
+/** 第一层叠卡（靠上）：降低饱和度和透明度 */
+const stackCardStyle1 = computed(() => {
+  return props.showStackShadow
+    ? { background: mainColor.value, filter: 'opacity(0.32) saturate(0.45)' }
+    : {}
+})
+
+/** 第二层叠卡（靠下）：进一步降低饱和度和透明度 */
+const stackCardStyle2 = computed(() => {
+  return props.showStackShadow
+    ? { background: mainColor.value, filter: 'opacity(0.2) saturate(0.4)' }
+    : {}
+})
 </script>
 
 <style lang="scss" scoped>
+.picture-card-stack {
+  position: relative;
+  /* 新增：让卡片图片区和 info 区纵向瓜分 item 的高度 */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .stack-card {
+    position: absolute;
+    top: 0;
+    bottom: 0px; /* 与主卡片同高 */
+    left: 50%;
+    border-radius: 16px;
+  }
+
+  .stack-card-1 {
+    width: 360px;
+    transform: translateX(-50%) translateY(12px);
+  }
+
+  .stack-card-2 {
+    width: 334px;
+    transform: translateX(-50%) translateY(24px);
+  }
+}
+
 .picture-card {
   position: relative;
-  border-radius: 12px;
+  z-index: 2;
+  border-radius: 16px;
+  height: 100%;
   overflow: hidden;
   cursor: pointer;
-  background: #f5f5f5;
+
+  .picture-card-tag-bar {
+    position: absolute;
+    top: 5%;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 3; /* 确保tag栏始终显示在图片上方 */
+  }
 
   .picture-card-image-wrapper {
     width: 100%;
@@ -99,14 +155,10 @@ const handleClick = () => {
       object-fit: cover;
       transition: transform 0.35s ease;
       display: block;
-
-      &.is-zoomed {
-        transform: scale(1.12);
-      }
     }
   }
 
-  .picture-card-bar {
+  .picture-card-action-bar {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -114,23 +166,29 @@ const handleClick = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
-    background: rgba(0, 0, 0, 0.35);
+    padding: 10px 24px;
+    box-sizing: border-box;
+    height: 52px;
+    background: rgba(0, 0, 0, 0);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    pointer-events: auto;
+
+    /* 隐藏态 */
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none; /* 防止看不见的按钮挡住点击 */
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
 
     .picture-card-name {
       color: #fff;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 1.4;
+      font-weight: 600;
+      font-size: 16px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       flex: 1;
-      min-width: 0;
-      margin-right: 8px;
     }
 
     .picture-card-actions {
@@ -138,58 +196,60 @@ const handleClick = () => {
       display: flex;
       align-items: center;
       gap: 6px;
-
-      .picture-card-action-btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 6px;
-        background: #fff;
-        border: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover {
-          background: #f0f0f0;
-        }
-
-        :deep(.anticon) {
-          color: #000;
-          font-size: 15px;
-        }
-      }
     }
   }
-}
 
-// 底部横栏动画
-.bar-fade-enter-active {
-  animation: bar-in 0.25s ease;
-}
-
-.bar-fade-leave-active {
-  animation: bar-out 0.2s ease;
-}
-
-@keyframes bar-in {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
+  /* ============ 显示态：hover 或 always-show-bar ============ */
+  &:hover .picture-card-image {
+    transform: scale(1.12);
   }
-  to {
+
+  &:hover .picture-card-action-bar,
+  &.always-show-bar .picture-card-action-bar {
     opacity: 1;
     transform: translateY(0);
+    pointer-events: auto;
   }
 }
 
-@keyframes bar-out {
-  from {
-    opacity: 1;
-    transform: translateY(0);
+.picture-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 2px;
+
+  .picture-info-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-left: 2px;
+    color: #303133;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  to {
-    opacity: 0;
-    transform: translateY(100%);
+
+  .picture-info-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .view-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: #9ca3af;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
   }
 }
 </style>
