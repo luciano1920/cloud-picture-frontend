@@ -33,7 +33,9 @@
       />
       <JustifiedPictureList ref="listRef" :data-list="pictureDataList" :extra-height="35">
         <template #item="{ picture }">
-          <PictureCard :picture="picture" show-info />
+          <RouterLink :to="`/picture/${picture.id}`">
+            <PictureCard :picture="picture" show-info @card-click="viewPictureDetail" />
+          </RouterLink>
         </template>
       </JustifiedPictureList>
 
@@ -53,6 +55,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { message } from 'antdv-next'
 import { listPictureVoByPageUsingPost } from '@/api/picture-controller'
 import PictureCard from '@/components/common/PictureCard.vue'
+import JustifiedPictureList from '@/components/common/JustifiedPictureList.vue'
 
 // 图片展示列表相关数据
 const loading = ref<boolean>(true)
@@ -101,6 +104,10 @@ const onPageChange = (page: number, pageSize: number) => {
 const handleSearch = () => {
   searchParams.current = 1 // 重置搜索条件
   fetchPictureData()
+}
+
+const viewPictureDetail = (picture: PICTURE_API.PictureVO) => {
+  console.log('查看图片详情', picture)
 }
 
 // 页面加载时获数据，请求一次

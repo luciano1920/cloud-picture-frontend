@@ -188,18 +188,6 @@ export const routes: Array<RouteRecordRaw> = [
       //   },
       // },
 
-      // // 图片详情
-      // {
-      //   path: 'picture/:id',
-      //   name: '图片详情',
-      //   component: () => import('@/pages/PictureDetailPage.vue'),
-      //   props: true,
-      //   meta: {
-      //     title: '图片详情',
-      //     show: false,
-      //     access: ACCESS_ENUM.USER,
-      //   },
-      // },
       // // 搜索图片
       // {
       //   path: 'search-picture',
@@ -262,6 +250,18 @@ export const routes: Array<RouteRecordRaw> = [
         meta: {
           icon: () => h(HomeOutlined),
           // access: ACCESS_ENUM.USER,
+        },
+      },
+      // 图片详情
+      {
+        path: 'picture/:id',
+        name: '图片详情',
+        component: () => import('@/pages/picture/PictureDetailPage.vue'),
+        props: true,
+        meta: {
+          title: '图片详情',
+          show: false,
+          access: ACCESS_ENUM.USER,
         },
       },
     ],
